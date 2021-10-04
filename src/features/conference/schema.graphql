@@ -1,0 +1,54 @@
+extend type Query {
+  conferenceList(pager: PagerInput!, filters: ConferenceFilterInput): ConferenceList
+  conference(id: ID!): Conference
+}
+
+type ConferenceList {
+  values: [Conference!]!
+  pagination(pager: PagerInput!, filters: ConferenceFilterInput): Pagination
+}
+
+input ConferenceFilterInput {
+  startDate: DateTime
+  endDate: DateTime
+  organizerEmail: String
+}
+
+type Conference {
+  id: ID!
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  type: Type
+  category: Category
+  location: Location!
+  speakers: [Speaker!]!
+  status(userEmail: String!): Status
+}
+
+type Location {
+  id: ID!
+  name: String
+  address: String
+  latitude: String
+  longitude: String
+  city: City!
+  county: County!
+  country: Country!
+}
+type Speaker {
+  id: ID!
+  name: String
+  isMainSpeaker: Boolean
+  nationality: String
+  rating: Float
+}
+
+input Attendee {
+  attendeeEmail: String!
+  conferenceId: ID!
+}
+
+extend type Mutation{
+  attend(input: Attendee):String
+}
