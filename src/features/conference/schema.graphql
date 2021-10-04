@@ -1,6 +1,6 @@
 extend type Query {
   conferenceList(pager: PagerInput!, filters: ConferenceFilterInput): ConferenceList
-  conference(id: ID!): Conference
+  conference(id: ID): Conference
 }
 
 type ConferenceList {
@@ -44,11 +44,17 @@ type Speaker {
   rating: Float
 }
 
+type AttendConference {
+  code: String
+  suggestedConferences: [Conference!]
+}
+
 input Attendee {
   attendeeEmail: String!
   conferenceId: ID!
 }
 
-extend type Mutation{
-  attend(input: Attendee):String
+extend type Mutation {
+  attend(input: Attendee): AttendConference
+  withdraw(input: Attendee): Int
 }

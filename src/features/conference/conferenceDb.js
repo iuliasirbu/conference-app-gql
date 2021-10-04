@@ -11,7 +11,6 @@ class ConferenceDb extends SQLDataSource {
 
   async getConferenceList(pager, filters) {
     const { page, pageSize } = pager
-
     const values = await this.knex
       .select(...conferenceColumns)
       .from('Conference')
