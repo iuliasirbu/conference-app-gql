@@ -1,19 +1,3 @@
-extend type Query {
-  conferenceList(pager: PagerInput!, filters: ConferenceFilterInput): ConferenceList
-  conference(id: ID): Conference
-}
-
-type ConferenceList {
-  values: [Conference!]!
-  pagination(pager: PagerInput!, filters: ConferenceFilterInput): Pagination
-}
-
-input ConferenceFilterInput {
-  startDate: DateTime
-  endDate: DateTime
-  organizerEmail: String
-}
-
 type Conference {
   id: ID!
   name: String!
@@ -43,10 +27,20 @@ type Speaker {
   nationality: String
   rating: Float
 }
+type ConferenceList {
+  values: [Conference!]!
+  pagination(pager: PagerInput!, filters: ConferenceFilterInput): Pagination
+}
 
-type AttendConference {
-  code: String
-  suggestedConferences: [Conference!]
+input ConferenceFilterInput {
+  startDate: DateTime
+  endDate: DateTime
+  organizerEmail: String
+}
+
+extend type Query {
+  conferenceList(pager: PagerInput!, filters: ConferenceFilterInput): ConferenceList
+  conference(id: ID!): Conference
 }
 
 input Attendee {
@@ -54,7 +48,56 @@ input Attendee {
   conferenceId: ID!
 }
 
+type AttendConference {
+  code: String
+  suggestedConferences: [Conference!]
+}
+
+input ConferenceInput {
+  id: ID
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  organizerEmail: String!
+  type: TypeInput
+  category: CategoryInput
+  location: LocationInput!
+  speakers: [SpeakerInput!]!
+  deletedSpeakers: [ID]
+}
+
+input CategoryInput {
+  id: ID
+  name: String
+  code: String
+}
+
+input TypeInput {
+  id: ID
+  name: String
+  code: String
+}
+
+input LocationInput {
+  id: ID
+  name: String
+  address: String
+  latitude: String
+  longitude: String
+  cityId: ID!
+  countyId: ID!
+  countryId: ID!
+}
+input SpeakerInput {
+  id: ID
+  name: String
+  isMainSpeaker: Boolean
+  nationality: String
+  rating: Float
+}
+
 extend type Mutation {
   attend(input: Attendee): AttendConference
-  withdraw(input: Attendee): Int
+  withdraw(input: Attendee!): Int
+  saveConference(input: ConferenceInput): Conference
 }
