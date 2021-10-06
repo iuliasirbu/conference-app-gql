@@ -41,6 +41,12 @@ input ConferenceFilterInput {
 extend type Query {
   conferenceList(pager: PagerInput!, filters: ConferenceFilterInput): ConferenceList
   conference(id: ID!): Conference
+  joinedAttendees(id: ID!): [Attendees]
+}
+
+type Attendees {
+  attendeeEmail: String!
+  conferenceId: ID!
 }
 
 input Attendee {
@@ -88,6 +94,7 @@ input LocationInput {
   countyId: ID!
   countryId: ID!
 }
+
 input SpeakerInput {
   id: ID
   name: String
@@ -98,6 +105,7 @@ input SpeakerInput {
 
 extend type Mutation {
   attend(input: Attendee): AttendConference
-  withdraw(input: Attendee!): Int
+  withdraw(input: Attendee): Int
   saveConference(input: ConferenceInput): Conference
+  join(input: Attendee): Int
 }

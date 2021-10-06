@@ -9,6 +9,10 @@ const conferenceResolvers = {
     conference: async (_parent, { id }, { dataSources }, _info) => {
       const data = await dataSources.conferenceDb.getConferenceById(id)
       return data
+    },
+    joinedAttendees: async (_parent, { id }, { dataSources }, _info) => {
+      const data = await dataSources.conferenceDb.getAttendeesByConference(id)
+      return data
     }
   },
   ConferenceList: {
@@ -86,6 +90,12 @@ const conferenceResolvers = {
       )
       input?.deleteSpeakers?.length > 0 && (await dataSources.conferenceDb.deleteSpeaker(input.deletedSpeakers))
       return { ...updateConference, location, speaker }
+    },
+
+    join: async (_parent, { input }, { dataSources }, _info) => {
+      const updateInput = { ...input, statusId: status.Joined }
+      const statusId = await dataSources.conferenceDb.updateConferenceXAttendee(updateInput)
+      return statusId
     }
   }
 }
